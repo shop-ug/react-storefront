@@ -9,10 +9,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useLocalStorage } from "react-use";
 
 import { MainMenu } from "@/components/MainMenu";
 import { CHECKOUT_TOKEN } from "@/lib/const";
+import { useLocalStorage } from "@/lib/hooks/useLocalStorage";
 import { usePaths } from "@/lib/paths";
 import { useCheckoutByTokenQuery } from "@/saleor/api";
 
@@ -23,8 +23,9 @@ export const Navbar = () => {
   const paths = usePaths();
   const [isRegionDialogOpen, setRegionDialogOpen] = useState(false);
   const { currentChannel } = useRegions();
-
-  const [checkoutToken, setCheckoutToken] = useLocalStorage(CHECKOUT_TOKEN);
+  // using our useLocalStorage hook because it listens to changes
+  // in storage when token changes in the background
+  const [checkoutToken, setCheckoutToken] = useLocalStorage(CHECKOUT_TOKEN, "");
   const { logout } = useAuth();
   const router = useRouter();
   const client = useApolloClient();

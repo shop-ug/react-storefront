@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import apolloClient from "@/lib/graphql";
+import { useCheckoutWithToken } from "@/lib/providers/CheckoutWithTokenProvider";
 import {
   Channel,
   CHANNELS,
@@ -28,13 +29,14 @@ export const [useContext, Provider] = createSafeContext<RegionsConsumerProps>();
 
 export const RegionsProvider: React.FC = ({ children }) => {
   const router = useRouter();
+  const { resetCheckoutToken } = useCheckoutWithToken();
 
   const [currentChannelSlug, setCurrentChannelSlug] = useState(
     router.query.channel
   );
 
   const setCurrentChannel = (channel: string) => {
-    // TODO: changing the channel should also clear the cart
+    resetCheckoutToken();
     setCurrentChannelSlug(channel);
     apolloClient.clearStore();
   };

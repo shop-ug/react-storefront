@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { useCheckoutWithToken } from "@/lib/providers/CheckoutWithTokenProvider";
 import { translate } from "@/lib/translations";
 import {
   CheckoutLineDetailsFragment,
@@ -13,18 +14,17 @@ import {
 } from "@/saleor/api";
 
 import { usePaths } from "../lib/paths";
+import { Spinner } from ".";
 import { useRegions } from "./RegionsProvider";
 
 interface CheckoutLineItemProps {
   line: CheckoutLineDetailsFragment;
-  token: string;
 }
 
-export const CheckoutLineItem = ({ line, token }: CheckoutLineItemProps) => {
+export const CheckoutLineItem = ({ line }: CheckoutLineItemProps) => {
   const paths = usePaths();
-  const router = useRouter();
   const { query } = useRegions();
-
+  const { checkoutToken: token } = useCheckoutWithToken();
   const [checkoutLineUpdateMutation, { loading: loadingLineUpdate }] =
     useCheckoutLineUpdateMutation();
   const [removeProductFromCheckout] = useRemoveProductFromCheckoutMutation();
